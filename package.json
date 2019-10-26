@@ -1,6 +1,6 @@
 {
   "name": "remark-package-dependencies",
-  "version": "1.0.0",
+  "version": "0.0.0-dev",
   "description": "Inject to markdown the list of dependencies of your package",
   "main": "index.js",
   "license": "MIT",

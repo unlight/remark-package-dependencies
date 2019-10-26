@@ -1,0 +1,4 @@
+.npmignore
+.releaserc.js
+.editorconfig
+index.spec.js
