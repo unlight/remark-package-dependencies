@@ -1,0 +1,45 @@
+{
+  "name": "remark-package-dependencies",
+  "version": "1.0.0",
+  "description": "Inject to markdown the list of dependencies of your package",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test:d": "node --inspect-brk index.spec.js",
+    "test:w": "watchexec --watch . --ignore node_modules \"npm run test\"",
+    "eslint:w": "watchexec -w src \"npm run eslint\"",
+    "test": "node index.spec.js"
+  },
+  "dependencies": {
+    "bundle-phobia-cli": "^0.14.1",
+    "markdown-table": "^1.1.3",
+    "njct": "^8.0.0",
+    "prettysize": "^2.0.0",
+    "unist-util-visit": "^2.0.0"
+  },
+  "peerDependencies": {
+    "remark": ">=10"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^3.0.5",
+    "@semantic-release/git": "^7.0.17",
+    "remark": "^11.0.1",
+    "semantic-release": "^15.13.28",
+    "watchexec-bin": "^1.0.0",
+    "zora": "^3.1.3"
+  },
+  "keywords": [
+    "remark-plugin",
+    "markdown",
+    "remark",
+    "dependencies"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unlight/remark-package-dependencies.git"
+  },
+  "bugs": {
+    "url": "https://github.com/unlight/remark-package-dependencies/issues"
+  },
+  "homepage": "https://github.com/unlight/remark-package-dependencies#readme"
+}
