@@ -47,16 +47,24 @@ function getDependencies(options) {
     const packagePath = options.packagePath;
     const result = [];
     const packageData = JSON.parse(fs.readFileSync(packagePath, { encoding: 'utf8' }));
-    const execSync = inject('execSync', () => child_process.execSync);
     for (const name of Object.keys(packageData.dependencies)) {
         const packageJson = require(`${name}/package.json`);
         const { description, version } = packageJson;
         const license = getLicense(packageJson);
-        let size = execSync(`node node_modules/bundle-phobia-cli/index.js ${name} --size`, { encoding: 'utf8' });
-        size = Number(size.trim());
-        size = pretty(size, true, true, 1);
+        const size = getSize(name);
         const dependency = { name, version, description, size, license };
         result.push(dependency);
+    }
+    return result;
+}
+
+function getSize(name, defaultValue = 'unknown') {
+    const execSync = inject('execSync', () => child_process.execSync);
+    let result = defaultValue;
+    try {
+        const size = execSync(`node node_modules/bundle-phobia-cli/index.js ${name} --size`, { encoding: 'utf8' });
+        result = pretty(Number(size.trim()), true, true, 1);
+    } catch (e) {
     }
     return result;
 }

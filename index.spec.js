@@ -3,16 +3,15 @@ const plugin = require('./index');
 const remark = require('remark');
 const { injector } = require('njct');
 
-injector.mock('execSync', () => {
-    return (command, options) => {
-        return String(42);
-    };
-});
+let execSyncMock = (command, options) => String(42);
+injector.mock('execSync', () => execSyncMock);
 
 test('smoke', t => {
+    injector.mock('execSync', () => execSyncMock);
     t.ok(plugin);
     t.ok(typeof plugin === 'function');
     t.ok(plugin.name === 'remarkPackageDependencies');
+    injector.clear();
 });
 
 function process(markdown, options) {
@@ -23,6 +22,7 @@ function process(markdown, options) {
 }
 
 test('paste to dependencies section by default', t => {
+    injector.mock('execSync', () => execSyncMock);
     const result = process(`### Dependencies`);
     t.ok(result.includes('prettysize'));
     t.ok(result.includes('Name'));
@@ -30,5 +30,14 @@ test('paste to dependencies section by default', t => {
     t.ok(result.includes('Version'));
     t.ok(result.includes('Size'));
     t.ok(result.includes('License'));
+    injector.clear();
 });
 
+test('execSync throws exception', t => {
+    injector.mock('execSync', () => () => { throw new Error('Fail'); });
+    t.doesNotThrow(() => {
+        const result = process(`### Dependencies`);
+        t.ok(result.includes('unknown'));
+    });
+    injector.clear();
+});
