@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/unlight/remark-package-dependencies/compare/v1.0.1...v1.0.2) (2019-12-30)
+
+
+### Bug Fixes
+
+* Replace existing table ([b1d2fe9](https://github.com/unlight/remark-package-dependencies/commit/b1d2fe97f1ab07805acdd130df043976724b46fe))
+
 ## [1.0.1](https://github.com/unlight/remark-package-dependencies/compare/v1.0.0...v1.0.1) (2019-10-28)
 
 
