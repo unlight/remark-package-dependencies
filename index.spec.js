@@ -6,6 +6,13 @@ const { injector } = require('njct');
 let execSyncMock = (command, options) => String(42);
 injector.mock('execSync', () => execSyncMock);
 
+function process(markdown, options) {
+    return remark()
+        .use(plugin, options)
+        .processSync(markdown)
+        .toString();
+}
+
 test('smoke', t => {
     injector.mock('execSync', () => execSyncMock);
     t.ok(plugin);
@@ -13,13 +20,6 @@ test('smoke', t => {
     t.ok(plugin.name === 'remarkPackageDependencies');
     injector.clear();
 });
-
-function process(markdown, options) {
-    return remark()
-        .use(plugin, options)
-        .processSync(markdown)
-        .toString();
-}
 
 test('paste to dependencies section by default', t => {
     injector.mock('execSync', () => execSyncMock);
@@ -40,4 +40,15 @@ test('execSync throws exception', t => {
         t.ok(result.includes('unknown'));
     });
     injector.clear();
+});
+
+test('should overwrite existsing table', t => {
+    injector.mock('execSync', () => execSyncMock);
+    const result = process(`
+## Dependencies
+
+| ExistingTable | X  |
+| :------------ |:-- |
+`);
+    t.ok(!result.includes('ExistingTable'));
 });

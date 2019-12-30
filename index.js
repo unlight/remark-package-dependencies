@@ -23,11 +23,15 @@ module.exports = function remarkPackageDependencies(options = {}) {
         visit(root, 'heading', (node, index, parent) => {
             const child = node.children.length > 0 && node.children[0];
             if (child && child.type === 'text' && child.value === options.heading) {
-                let next = parent.children[index + 1];
-                if (!next || next.type !== 'paragraph') {
-                    parent.children.splice(index + 1, 0, { type: 'paragraph', children: [] });
-                    next = parent.children[index + 1];
+                const nextIndex = index + 1;
+                let next = parent.children[nextIndex];
+                if (next && next.type === 'table') {
+                    parent.children.splice(nextIndex, 1);
+                    parent.children.splice(nextIndex, 0, { type: 'paragraph', children: [] });
+                } else {
+                    parent.children.splice(index, 0, { type: 'paragraph', children: [] });
                 }
+                next = parent.children[nextIndex];
                 const paragraphText = markdownTableDependencies(dependencies);
                 next.children = [{ type: 'text', value: paragraphText }];
             }
@@ -77,10 +81,10 @@ function markdownTableDependencies(dependencies) {
         ...dependencies.map(dependency => {
             return [
                 dependency.name,
-                dependency.description,
+                dependency.description || '-',
                 dependency.version,
                 dependency.size,
-                dependency.license
+                dependency.license || '-'
             ];
         }),
     ];
