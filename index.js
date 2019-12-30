@@ -2,7 +2,6 @@ const visit = require('unist-util-visit');
 const fs = require('fs');
 const child_process = require('child_process');
 const pretty = require('prettysize');
-const table = require('markdown-table');
 const { inject } = require('njct');
 
 const defaultOptions = {
@@ -18,26 +17,29 @@ const defaultOptions = {
 
 module.exports = function remarkPackageDependencies(options = {}) {
     options = { ...defaultOptions, ...options };
-    const dependencies = getDependencies(options);
-    return (root) => {
+    return root => {
         visit(root, 'heading', (node, index, parent) => {
             const child = node.children.length > 0 && node.children[0];
             if (child && child.type === 'text' && child.value === options.heading) {
+                debugger;
                 const nextIndex = index + 1;
                 let next = parent.children[nextIndex];
-                if (next && next.type === 'table') {
-                    parent.children.splice(nextIndex, 1);
-                    parent.children.splice(nextIndex, 0, { type: 'paragraph', children: [] });
-                } else {
-                    parent.children.splice(index, 0, { type: 'paragraph', children: [] });
+                if (!next || next.type !== 'table') {
+                    parent.children.splice(nextIndex, 0, {
+                        type: 'table',
+                        align: [],
+                        children: [],
+                    });
+                    next = parent.children[nextIndex];
                 }
-                next = parent.children[nextIndex];
-                const paragraphText = markdownTableDependencies(dependencies);
-                next.children = [{ type: 'text', value: paragraphText }];
+                const dependencies = getDependencies(options);
+                const table = markdownTableDependencies(dependencies);
+                next.align = table.align;
+                next.children = table.children;
             }
         });
     };
-}
+};
 
 /**
  * Returns array of dependency:
@@ -66,29 +68,44 @@ function getSize(name, defaultValue = 'unknown') {
     const execSync = inject('execSync', () => child_process.execSync);
     let result = defaultValue;
     try {
-        const size = execSync(`node node_modules/bundle-phobia-cli/index.js ${name} --size`, { encoding: 'utf8' });
+        const size = execSync(`node node_modules/bundle-phobia-cli/index.js ${name} --size`, {
+            encoding: 'utf8',
+        });
         result = pretty(Number(size.trim()), true, true, 1);
-    } catch (e) {
-    }
+    } catch (e) {}
     return result;
 }
 
 function markdownTableDependencies(dependencies) {
     const headers = ['Name', 'Description', 'Version', 'Size', 'License'];
-    const align = ['l', 'l', 'l', 'r', 'c'];
     const rows = [
-        headers,
+        tableRow(headers),
         ...dependencies.map(dependency => {
-            return [
+            return tableRow([
                 dependency.name,
                 dependency.description || '-',
                 dependency.version,
                 dependency.size,
-                dependency.license || '-'
-            ];
+                dependency.license || '-',
+            ]);
         }),
     ];
-    return table(rows, { align });
+    const result = {
+        type: 'table',
+        align: ['left', 'left', 'left', 'right', 'center'],
+        children: rows,
+    };
+    return result;
+}
+
+function tableRow(values) {
+    return {
+        type: 'tableRow',
+        children: values.map(value => ({
+            type: 'tableCell',
+            children: [{ type: 'text', value }],
+        })),
+    };
 }
 
 function getLicense(packageJson) {

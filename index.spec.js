@@ -30,11 +30,14 @@ test('paste to dependencies section by default', t => {
     t.ok(result.includes('Version'));
     t.ok(result.includes('Size'));
     t.ok(result.includes('License'));
+    t.ok(!result.includes('\\|'));
     injector.clear();
 });
 
 test('execSync throws exception', t => {
-    injector.mock('execSync', () => () => { throw new Error('Fail'); });
+    injector.mock('execSync', () => () => {
+        throw new Error('Fail');
+    });
     t.doesNotThrow(() => {
         const result = process(`### Dependencies`);
         t.ok(result.includes('unknown'));
