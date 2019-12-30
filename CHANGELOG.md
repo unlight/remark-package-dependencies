@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/unlight/remark-package-dependencies/compare/v1.0.2...v1.1.0) (2019-12-30)
+
+
+### Features
+
+* Get rid of markdown-table, fixed escaped pipe bug ([36080fa](https://github.com/unlight/remark-package-dependencies/commit/36080fad094db9d8a98c5709310064e6e0c88ed6))
+
 ## [1.0.2](https://github.com/unlight/remark-package-dependencies/compare/v1.0.1...v1.0.2) (2019-12-30)
 
 
