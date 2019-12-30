@@ -21,7 +21,6 @@ module.exports = function remarkPackageDependencies(options = {}) {
         visit(root, 'heading', (node, index, parent) => {
             const child = node.children.length > 0 && node.children[0];
             if (child && child.type === 'text' && child.value === options.heading) {
-                debugger;
                 const nextIndex = index + 1;
                 let next = parent.children[nextIndex];
                 if (!next || next.type !== 'table') {
@@ -72,7 +71,9 @@ function getSize(name, defaultValue = 'unknown') {
             encoding: 'utf8',
         });
         result = pretty(Number(size.trim()), true, true, 1);
-    } catch (e) {}
+    } catch (e) {
+        // do nothing
+    }
     return result;
 }
 

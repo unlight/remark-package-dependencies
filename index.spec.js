@@ -1,7 +1,7 @@
-const { test } = require('zora');
 const plugin = require('./index');
 const remark = require('remark');
 const { injector } = require('njct');
+const assert = require('assert');
 
 let execSyncMock = (command, options) => String(42);
 injector.mock('execSync', () => execSyncMock);
@@ -13,45 +13,42 @@ function process(markdown, options) {
         .toString();
 }
 
-test('smoke', t => {
-    injector.mock('execSync', () => execSyncMock);
-    t.ok(plugin);
-    t.ok(typeof plugin === 'function');
-    t.ok(plugin.name === 'remarkPackageDependencies');
-    injector.clear();
-});
-
-test('paste to dependencies section by default', t => {
-    injector.mock('execSync', () => execSyncMock);
-    const result = process(`### Dependencies`);
-    t.ok(result.includes('prettysize'));
-    t.ok(result.includes('Name'));
-    t.ok(result.includes('Description'));
-    t.ok(result.includes('Version'));
-    t.ok(result.includes('Size'));
-    t.ok(result.includes('License'));
-    t.ok(!result.includes('\\|'));
-    injector.clear();
-});
-
-test('execSync throws exception', t => {
-    injector.mock('execSync', () => () => {
-        throw new Error('Fail');
+describe('index', () => {
+    beforeEach(() => {
+        injector.mock('execSync', () => execSyncMock);
     });
-    t.doesNotThrow(() => {
+
+    afterEach(() => {
+        injector.clear();
+    });
+
+    it('smoke', () => {
+        assert(plugin);
+        assert(typeof plugin === 'function');
+        assert(plugin.name === 'remarkPackageDependencies');
+    });
+
+    it('paste to dependencies section by default', () => {
         const result = process(`### Dependencies`);
-        t.ok(result.includes('unknown'));
+        assert(result.includes('prettysize'));
+        assert(result.includes('Name'));
+        assert(result.includes('Description'));
+        assert(result.includes('Version'));
+        assert(result.includes('Size'));
+        assert(result.includes('License'));
+        assert(!result.includes('\\|'));
     });
-    injector.clear();
-});
 
-test('should overwrite existsing table', t => {
-    injector.mock('execSync', () => execSyncMock);
-    const result = process(`
-## Dependencies
+    it('execSync throws exception', () => {
+        injector.mock('execSync', () => () => {
+            throw new Error('Fail');
+        });
+        const result = process(`### Dependencies`);
+        assert(result.includes('unknown'));
+    });
 
-| ExistingTable | X  |
-| :------------ |:-- |
-`);
-    t.ok(!result.includes('ExistingTable'));
+    it('should overwrite existsing table', () => {
+        const result = process(`## Dependencies\n\n| ExistingTable | X  |\n| :------------ |:-- |`);
+        assert(!result.includes('ExistingTable'));
+    });
 });
