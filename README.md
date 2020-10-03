@@ -14,10 +14,7 @@ npm install --save-dev remark-package-dependencies
 const remark = require('remark');
 const remarkPackageDependencies = require('remark-package-dependencies');
 const input = '## Dependencies';
-const output = remark()
-    .use(remarkPackageDependencies, options)
-    .processSync(input)
-    .toString();
+const output = remark().use(remarkPackageDependencies, options).processSync(input).toString();
 ```
 
 Output:
