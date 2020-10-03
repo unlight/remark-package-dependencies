@@ -3,8 +3,10 @@ module.exports = {
         commonjs: true,
         es6: true,
         node: true,
+        mocha: true,
     },
-    extends: 'eslint:recommended',
+    plugins: ['only-warn'],
+    extends: ['eslint:recommended'],
     parserOptions: {
         ecmaVersion: 2018,
     },
