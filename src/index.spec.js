@@ -1,5 +1,6 @@
 const plugin = require('./index');
 const remark = require('remark');
+const gfm = require('remark-gfm');
 const { injector } = require('njct');
 const assert = require('assert');
 
@@ -7,7 +8,7 @@ let execSyncMock = () => String(42);
 injector.mock('execSync', () => execSyncMock);
 
 function process(markdown, options) {
-    return remark().use(plugin, options).processSync(markdown).toString();
+    return remark().use(gfm).use(plugin, options).processSync(markdown).toString();
 }
 
 describe('index', () => {
