@@ -1,3 +1,13 @@
+# [2.0.0](https://github.com/unlight/remark-package-dependencies/compare/v1.1.0...v2.0.0) (2020-10-04)
+
+
+* New peer dependency ([1256a93](https://github.com/unlight/remark-package-dependencies/commit/1256a934ee5f103cdbb67880cfe64afce9cb1154))
+
+
+### BREAKING CHANGES
+
+* Adapt for remark v13 `remark-gfm`
+
 ## [1.1.1](https://github.com/unlight/remark-package-dependencies/compare/v1.1.0...v1.1.1) (2020-10-03)
 
 

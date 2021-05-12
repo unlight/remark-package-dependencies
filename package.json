@@ -1,34 +1,40 @@
 {
   "name": "remark-package-dependencies",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Inject to markdown the list of dependencies of your package",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test:d": "node --inspect-brk node_modules/mocha/bin/mocha index.spec.js",
-    "test:w": "npm run test -- --watch index.spec.js index.js",
-    "eslint": "eslint index.js",
-    "eslint:w": "watchexec -w . \"npm run eslint\"",
-    "test": "node node_modules/mocha/bin/mocha index.spec.js"
+    "test:d": "node --inspect-brk node_modules/mocha/bin/mocha src/index.spec.js",
+    "test:w": "mocha --watch-files src/**/*.js --watch src/**/*.spec.js",
+    "eslint:w": "watchexec -w src \"npm run eslint\"",
+    "eslint": "node node_modules/eslint/bin/eslint \"src/**/*.js\"",
+    "eslint:fix": "npm run eslint -- --fix",
+    "test": "npm run eslint && npm run test:r",
+    "test:r": "node node_modules/mocha/bin/mocha src/index.spec.js",
+    "build": "sh Taskfile build_cp"
   },
   "dependencies": {
-    "bundle-phobia-cli": "^0.14.1",
+    "bundle-phobia-cli": "^0.14.9",
     "njct": "^8.0.0",
     "prettysize": "^2.0.0",
-    "unist-util-visit": "^2.0.1"
+    "unist-util-visit": "^2.0.3"
   },
   "peerDependencies": {
-    "remark": ">=10 <=12"
+    "remark": "13",
+    "remark-gfm": "1"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^3.0.6",
-    "@semantic-release/git": "^7.0.18",
-    "eslint": "^6.8.0",
-    "mocha": "^6.2.2",
-    "prettier": "^1.19.1",
-    "remark": "^11.0.1",
-    "watchexec-bin": "^1.0.0",
-    "semantic-release": "^15.14.0"
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "eslint": "^7.10.0",
+    "eslint-plugin-only-warn": "^1.0.2",
+    "mocha": "^8.1.3",
+    "prettier": "^2.1.2",
+    "remark": "^13.0.0-alpha.1",
+    "remark-gfm": "^1.0.0",
+    "semantic-release": "^17.1.2",
+    "watchexec-bin": "^1.0.0"
   },
   "keywords": [
     "remark-plugin",
