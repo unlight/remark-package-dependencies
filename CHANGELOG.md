@@ -1,3 +1,11 @@
+### [2.0.1](https://github.com/unlight/remark-package-dependencies/compare/v2.0.0...v2.0.1) (2021-05-12)
+
+
+### Bug Fixes
+
+* **ci:** Release config ([8e4da3f](https://github.com/unlight/remark-package-dependencies/commit/8e4da3f91f547d9dfdb601a7b3b40ea24e49dac9)), closes [#2](https://github.com/unlight/remark-package-dependencies/issues/2)
+* Correct peerDependencies ([167da3a](https://github.com/unlight/remark-package-dependencies/commit/167da3ae1a5f449082afc49512c7c887eaa599a5))
+
 # [2.0.0](https://github.com/unlight/remark-package-dependencies/compare/v1.1.0...v2.0.0) (2020-10-04)
 
 
